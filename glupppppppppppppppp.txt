@@ -1,0 +1,121 @@
+#include <iostream>
+#include <cstring>
+
+using namespace std;
+
+class InvoiceItem{
+    char * ime;
+    char * opis;
+    int cena;
+public:
+    InvoiceItem(){
+        ime=new char[0];
+        strcpy(ime,"");
+        opis=new char[0];
+        strcpy(opis,"");
+        cena=0;
+    }
+    InvoiceItem(char * ime, char * opis, int cena) {
+        this->ime=new char[strlen(ime)+1];
+        strcpy(this->ime,ime);
+        this->opis=new char[strlen(opis)+1];
+        strcpy(this->opis,opis);
+        this->cena=cena;
+    }
+    InvoiceItem(const InvoiceItem &o) {
+        this->ime=new char[strlen(o.ime)+1];
+        strcpy(this->ime,o.ime);
+        this->opis=new char[strlen(o.opis)+1];
+        strcpy(this->opis,o.opis);
+        this->cena=o.cena;
+    }
+    InvoiceItem &operator=(const InvoiceItem &o) {
+        if(this!=&o) {
+            delete [] ime;
+            delete [] opis;
+            this->ime = new char[strlen(o.ime) + 1];
+            strcpy(this->ime, o.ime);
+            this->opis = new char[strlen(o.opis) + 1];
+            strcpy(this->opis, o.opis);
+            this->cena = o.cena;
+        }
+        return *this;
+    }
+    ~InvoiceItem(){
+        delete [] ime;
+        delete [] opis;
+    }
+
+    friend ostream &operator<<(ostream &os, const InvoiceItem &item) {
+        os << "Name: " << item.ime << "\nDescription: " << item.opis << "\nPrice: " << item.cena<<endl;
+        return os;
+    }
+    InvoiceItem &operator++(){
+        cena+=10;
+        return *this;
+    }
+    InvoiceItem operator++(int){
+        InvoiceItem in(*this);
+        cena+=10;
+        return *this;
+    }
+    int getCena() {
+        return cena;
+    }
+};
+class Invoice{
+    char brFakt[10];
+    InvoiceItem * stavki;
+    int brEl;
+public:
+    Invoice(char * brFakt=""){
+        strcpy(this->brFakt,brFakt);
+        stavki= new InvoiceItem[0];
+        brEl=0;
+    }
+    Invoice(char * brFakt, InvoiceItem * stavki, int brEl) {
+        strcpy(this->brFakt,brFakt);
+        this->brEl=brEl;
+        this->stavki=new InvoiceItem[brEl];
+        for(int i=0;i<brEl;i++) {
+            this->stavki[i]=stavki[i];
+        }
+    }
+    Invoice(const Invoice &o) {
+        strcpy(this->brFakt,o.brFakt);
+        this->brEl=o.brEl;
+        this->stavki=new InvoiceItem[o.brEl];
+        for(int i=0;i<o.brEl;i++) {
+            this->stavki[i]=o.stavki[i];
+        }
+    }
+    ~Invoice(){
+        delete [] stavki;
+    }
+    Invoice &operator+=(InvoiceItem &it) {
+        InvoiceItem * tmp=new InvoiceItem[brEl+1];
+        for(int i=0;i<brEl;i++) {
+            tmp[i]=stavki[i];
+        }
+        tmp[brEl++]=it;
+        delete [] stavki;
+        stavki=tmp;
+    }
+    int totalPrice() const {
+        int vk=0;
+        for(int i=0;i<brEl;i++) {
+            vk+=stavki[i].getCena();
+        }
+        return vk;
+    }
+
+    friend ostream &operator<<(ostream &os, const Invoice &invoice) {
+        os << "Invoice items: " << endl;
+        //invoice.brFakt << " stavki: " << invoice.stavki;
+        for(int i=0;i<invoice.brEl;i++) {
+            os<<invoice.stavki[i]<<endl;
+        }
+        os<<"Total invoice price: "<<invoice.totalPrice();
+        return os;
+    }
+};
