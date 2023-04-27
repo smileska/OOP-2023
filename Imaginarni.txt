@@ -1,0 +1,180 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+
+class ComplexNumber{
+private:
+    float real;
+    float imaginary;
+public:
+    ComplexNumber(float realC = 0,float imaginaryC = 0){
+        real = realC;
+        imaginary = imaginaryC;
+    }
+    double module(){
+        return sqrt(pow(real,2) + pow(imaginary,2));
+    }
+    ComplexNumber(const ComplexNumber &that){
+        real = that.real;
+        imaginary = that.imaginary;
+    }
+
+    ComplexNumber &operator =(const ComplexNumber& that){
+        if(this != &that){
+            real = that.real;
+            imaginary = that.imaginary;
+        }
+        return *this;
+    }
+    friend ostream &operator<< (ostream& out, const ComplexNumber &that){
+        if(that.real != 0 && that.imaginary != 0){
+            out<<that.real<<"+"<<that.imaginary<<"i"<<endl;
+        }else if(that.real != 0){
+            out<<that.real<<endl;
+        }else if(that.imaginary != 0){
+            out<<that.imaginary<<"i"<<endl;
+        }
+        return out;
+    }
+
+    ComplexNumber operator +(const ComplexNumber& that){
+        ComplexNumber zbir(real + that.real, imaginary + that.imaginary);
+        return zbir;
+    }
+    ComplexNumber operator -(const ComplexNumber& that){
+        ComplexNumber zbir(real - that.real, imaginary - that.imaginary);
+        return zbir;
+    }
+    ComplexNumber operator *(const ComplexNumber& that){
+        ComplexNumber zbir(real * that.real, imaginary * that.imaginary);
+        return zbir;
+    }
+    ComplexNumber operator /(const ComplexNumber& that){
+        ComplexNumber zbir(real / that.real, imaginary / that.imaginary);
+        return zbir;
+    }
+    bool operator ==(const ComplexNumber& that){
+        if(real == that.real && imaginary == that.imaginary){
+            return true;
+        }
+        return false;
+    }
+    bool operator >(const ComplexNumber& that){
+        if(real > that.real){
+            return true;
+        }else if(imaginary > that.imaginary){
+            return true;
+        }
+        return false;
+    }
+    bool operator <(const ComplexNumber& that){
+        if(real < that.real){
+            return true;
+        }else if(imaginary < that.imaginary){
+            return true;
+        }
+        return false;
+    }
+};
+
+class Equation{
+private:
+    ComplexNumber* niza;
+    char* znaci;
+    int num;
+public:
+    Equation(){
+        niza = new ComplexNumber[0];
+        znaci = new char[0];
+        num = 0;
+    }
+
+    friend istream &operator >>(istream& in, Equation& eq ){
+        char znak='n';
+        float re = 0;
+        float imag = 0;
+        do{
+            in>>re>>imag;
+            in>>znak;
+            ComplexNumber n1(re,imag);
+
+            ComplexNumber* temp;
+
+            char* temp1;
+            temp1 = new char[eq.num];
+
+            temp = new ComplexNumber[eq.num+1];
+           
+            for(int i = 0; i < eq.num; i++){
+                temp[i] = eq.niza[i];
+                temp1[i] = eq.znaci[i];
+            }
+            temp[eq.num] = n1;
+            temp1[eq.num] = znak;
+
+            delete[] eq.niza;
+            delete[] eq.znaci;
+
+            eq.niza = temp;
+            eq.znaci = temp1;
+            eq.num ++;
+
+        }while(znak != '=');
+
+        return in;
+    }
+    ComplexNumber result(){
+
+        ComplexNumber prethoden = niza[0];
+       
+        for(int i = 1; i < num; i++){
+            if(znaci[i-1] != '='){
+             
+                
+                switch(znaci[i-1]){
+                case '+':
+
+                    prethoden = prethoden + niza[i];
+                    break;
+                    
+                case '-':
+
+                    prethoden = prethoden - niza[i];
+                    
+                    break;
+
+                case '*':
+
+                    
+                    
+                    prethoden = prethoden * niza[i];
+                    break;
+
+                case '/':
+
+                    
+                    prethoden = prethoden / niza[i];
+                    break;
+                }
+          
+            }else{
+                break;
+            }
+        }
+        return prethoden;
+    }
+
+    double sumModules(){
+        double vrednost = 0;
+        for(int i = 0; i < num; i++){
+            vrednost += niza[i].module();
+        }
+        return vrednost;
+    }
+
+    ~Equation(){
+        delete[] niza;
+        delete[] znaci;
+
+    }
+};
