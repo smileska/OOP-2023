@@ -1,0 +1,54 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+class Room{
+public:
+    Room(){}
+    virtual void displayRoomInfo()=0;
+    virtual void displayRoomPrice()=0;
+    virtual ~Room(){};
+};
+class StandardRoom : public Room{
+    bool hasBathroom;
+public:
+    StandardRoom() {
+        this->hasBathroom=true;
+    }
+    StandardRoom(bool hasBathroom) {
+        this->hasBathroom=hasBathroom;
+    }
+    void displayRoomInfo() {
+        cout<<"This is a standard room with a queen-sized bed";
+        if(hasBathroom) {
+            cout<<" and a bathroom";
+        }
+        cout<<"."<<endl;
+    }
+    void displayRoomPrice(){
+        cout<<"The price for a standard room is ";
+        if(hasBathroom) cout<<"$100 per night."<<endl;
+        else cout<<"$80 per night."<<endl;
+    }
+};
+class DeluxeRoom : public Room{
+bool hasBalcony;
+public:
+    DeluxeRoom(){
+        hasBalcony=true;
+    }
+    DeluxeRoom(bool hasBalcony){
+        this->hasBalcony=hasBalcony;
+    }
+    void displayRoomInfo() {
+        cout<<"This is a deluxe room with a king-sized bed, a bathroom, a mini-fridge";
+        if(hasBalcony) {
+            cout<<" and a balcony";
+        }
+        cout<<"."<<endl;
+    }
+    void displayRoomPrice(){
+        cout<<"The price for a deluxe room is ";
+        if(hasBalcony) cout<<"$200 per night."<<endl;
+        else cout<<"$160 per night."<<endl;
+    }
+};
