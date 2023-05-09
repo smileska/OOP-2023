@@ -12,7 +12,7 @@ class StandardRoom : public Room{
     bool hasBathroom;
 public:
     StandardRoom() {
-        this->hasBathroom=true;
+        this->hasBathroom=false;
     }
     StandardRoom(bool hasBathroom) {
         this->hasBathroom=hasBathroom;
@@ -34,7 +34,7 @@ class DeluxeRoom : public Room{
 bool hasBalcony;
 public:
     DeluxeRoom(){
-        hasBalcony=true;
+        hasBalcony=false;
     }
     DeluxeRoom(bool hasBalcony){
         this->hasBalcony=hasBalcony;
