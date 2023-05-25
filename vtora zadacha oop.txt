@@ -1,0 +1,21 @@
+niza[i] = new CarRace(city, year, month, bestTime, length,
+
+                                      bestTimes, n, numberLaps);
+            }
+        }
+        // pecatenje na site Trki
+        cout << "\nLista na site Trki:\n";
+        for (int i = 0; i < m; i++)
+            cout << *niza[i];
+
+        CarRace::setKoeficient(0.7);
+        // pecatenje na site Trki
+        cout << "\nLista na site Trki:\n";
+        for (int i = 0; i < m; i++)
+            cout << *niza[i];
+    }
+
+
+
+    return 0;
+}
